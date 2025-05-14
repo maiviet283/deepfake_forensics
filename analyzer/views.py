@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from .ai_image_web import detect_deepfake_from_image
 import tempfile
 
 def index(request):
-    result = None
+    result_detect_deepfake_from_image = None
+    temp_file_path = None
 
     if request.method == 'POST' and request.FILES.get('image'):
         image_file = request.FILES['image']
@@ -14,11 +15,9 @@ def index(request):
                 temp_file.write(chunk)
             temp_file_path = temp_file.name
 
-        # Gửi ảnh đến API
-        result = detect_deepfake_from_image(temp_file_path)
-        result_value = result['result']['output']['aiProbability'] * 100
+        result_detect_deepfake_from_image = detect_deepfake_from_image(temp_file_path)
 
     return render(request, 'analyzer/index.html', {
-        'result': result,
-        'result_value': result_value
+        'image_url': temp_file_path,
+        'result_detect': result_detect_deepfake_from_image,
     })

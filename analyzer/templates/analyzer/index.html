@@ -4,6 +4,7 @@
 {% block head %}
     <title>Phân Tích Ảnh</title>
     <link rel="stylesheet" href='{% static "analyzer/css/index.css" %}' />
+    <script src='{% static "analyzer/js/index.js" %}'></script>
 {% endblock head %} 
 
 {% block body %}
@@ -12,18 +13,24 @@
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="image">Chọn ảnh cần phân tích:</label>
-            <input type="file" name="image" required />
+            <input type="file" id="image" name="image" accept="image/*" required onchange="previewImage(event)" />
             <input type="submit" value="Phân Tích" />
         </form>
+
+        <img id="preview" style="max-width: 400px; margin-top: 10px;" />
         
-        {% if result and result_value %}
+        {% if image_url %}
+            <img src='{{image_url}}' />
+        {% endif %}
+
+        {% if result_detect %}
             <h3>Kết quả phân tích:</h3>
             <ul>
-                <li><strong>Kết luận:</strong> {{ result.result.output.predictedResults }}</li>
-                <li><strong>Xác suất AI:</strong> {{ result_value|floatformat:2 }} %</li>
+                <li><strong>Kết luận:</strong> {{ result_detect.predictedResults }}</li>
+                <li><strong>Xác suất AI:</strong> {{ result_detect.aiProbability|floatformat:2 }} %</li>
             </ul>
         {% endif %}
         
-        <a href="/">← Quay về Trang Chủ</a>
+        <a href="/">Quay về Trang Chủ</a>
     </div>
 {% endblock body %}

@@ -15,22 +15,25 @@ def detect_deepfake_from_image(image_path):
             files = {'image': (image_path.split('/')[-1], f, 'image/jpeg')}
             response = requests.post(url_upload, files=files)
 
-        #print("Upload status:", response.status_code)
         data = response.json()
-        #print("Upload response:", data)
 
         if data.get("code") == 100000:
             request_id = data["result"]["request_id"]
             url_result = f"https://api.decopy.ai/api/decopy/ai-image-detector/get-job/{request_id}"
 
-            # Chờ server xử lý (có thể cần điều chỉnh thời gian)
             time.sleep(1)
 
             result_response = requests.get(url_result)
-            #print("Result status:", result_response.status_code)
             result_data = result_response.json()
-            #print("Detection result:", result_data)
-            return result_data
+
+            aiProbability = result_data['result']['output']['aiProbability'] * 100
+            predictedResults = result_data['result']['output']['predictedResults']
+
+            return ({
+                'aiProbability':aiProbability,
+                'predictedResults': predictedResults
+            })
+        
         else:
             print("Upload failed.")
             return None
