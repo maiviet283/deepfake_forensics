@@ -16,9 +16,12 @@
             <input type="submit" value="Phân Tích" />
         </form>
         
-        {% if ela_image %}
+        {% if result and result_value %}
             <h3>Kết quả phân tích:</h3>
-            <img src="{{ ela_image }}" alt="Ảnh phân tích ELA" style="max-width: 100%" />
+            <ul>
+                <li><strong>Kết luận:</strong> {{ result.result.output.predictedResults }}</li>
+                <li><strong>Xác suất AI:</strong> {{ result_value|floatformat:2 }} %</li>
+            </ul>
         {% endif %}
         
         <a href="/">← Quay về Trang Chủ</a>
