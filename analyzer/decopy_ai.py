@@ -1,13 +1,7 @@
 import requests
 import time
 
-def detect_deepfake_from_image(image_path):
-    """
-    Gửi ảnh đến API decopy.ai để phân tích deepfake và trả về kết quả.
-    
-    :param image_path: Đường dẫn tới file ảnh cần phân tích
-    :return: dict kết quả nếu thành công, hoặc None nếu thất bại
-    """
+def check_image_ai_decopy(image_path):
     url_upload = "https://api.decopy.ai/api/decopy/ai-image-detector/create-job"
 
     try:
@@ -31,17 +25,28 @@ def detect_deepfake_from_image(image_path):
             result_response = requests.get(url_result)
             result_data = result_response.json()
             if result_data.get("result", {}).get("output"):
-                break  # Thoát vòng lặp khi nhận dữ liệu hợp lệ
+                break 
 
         if not result_data or "output" not in result_data.get("result", {}):
             return {"error": "Deepfake detection failed"}
 
         ai_probability = result_data['result']['output']['aiProbability'] * 100
-        predicted_results = result_data['result']['output']['predictedResults']
+        ai_probability = round(ai_probability, 2)
+
+        if ai_probability > 50:
+            ai_probability = (ai_probability-50) * 2
+        elif ai_probability < 50:
+            ai_probability = ai_probability * 2
+        else:
+            ai_probability = 50
+
+        if result_data['result']['output']['predictedResults'] == 'real':
+            predicted_results = 'Ảnh Thật'
+        else : predicted_results = 'Ảnh Được Tạo Bằng AI'
 
         return {
-            'aiProbability': ai_probability,
-            'predictedResults': predicted_results
+            'isItAi': predicted_results,
+            'probability': ai_probability,
         }
 
     except Exception as e:

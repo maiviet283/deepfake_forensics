@@ -1,10 +1,14 @@
 import json
 from django.shortcuts import render
-from .ai_image_web import detect_deepfake_from_image
+from .decopy_ai import check_image_ai_decopy
+from .wasit_ai import check_image_ai_wasitai
+from .combine_ai_results import combine_ai_results
 from .models import Image
 
 def index(request):
-    result_detect = None
+    result_decopy = None
+    result_waist = None
+    result_final = None
     metadata = None
     image_url = None
 
@@ -29,10 +33,14 @@ def index(request):
 
         # Gọi AI Detector nếu ảnh được lưu thành công
         if temp_file_path:
-            result_detect = detect_deepfake_from_image(temp_file_path)
+            result_decopy = check_image_ai_decopy(temp_file_path)
+            result_waist = check_image_ai_wasitai(temp_file_path)
+            result_final = combine_ai_results(result_decopy['isItAi'],result_waist['isItAi'],result_decopy['probability'],result_waist['probability'])
 
     return render(request, 'analyzer/index.html', {
         'image_url': image_url,
-        'result_detect': result_detect,
         'result_metadata': metadata,
+        'result_decopy': result_decopy,
+        'result_waist': result_waist,
+        'result_final': result_final
     })

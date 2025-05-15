@@ -59,26 +59,33 @@
         <!-- Right Column: AI Analysis -->
         <div class="analysis-section">
             <h2>Kết Quả</h2>
-            {% if result_detect %}
-                <h3>AI Image Detector</h3>
+            {% if result_decopy %}
+                <h3>Decopy AI</h3>
                 <ul>
                     <li><img src="{% static 'analyzer/images/decopy_ai.png' %}" /></li>
-                    <li><strong>Kết luận:</strong> {{ result_detect.predictedResults }}</li>
-                    <li><strong>Xác suất AI:</strong> {{ result_detect.aiProbability|floatformat:2 }} %</li>
+                    <li><strong>Kết luận:</strong> {{ result_decopy.isItAi }}</li>
+                    <li><strong>Độ Tin Cậy :</strong> {{ result_decopy.probability }} %</li>
+                </ul>
+            {% endif %}
+            
+
+            {% if result_waist %}
+                <h3>Wasit AI</h3>
+                <ul>
+                    <li><img src="{% static 'analyzer/images/wasit_ai.png' %}" /></li>
+                    <li><strong>Kết luận:</strong> {{ result_waist.isItAi }}</li>
+                    <li><strong>Độ Tin Cậy :</strong> {{ result_waist.probability }} %</li>
+                    <li><strong>Mô Tả:</strong> {{ result_waist.description }}</li>
                 </ul>
             {% endif %}
 
-                <h3>Image Analysis</h3>
-                <ul>
-                    <li><strong>Kết luận:</strong> Chưa Có </li>
-                    <li><strong>Xác suất AI:</strong> 0 %</li>
-                </ul>
-
+            {% if result_final %}
                 <h3>Tổng Kết</h3>
                 <ul>
-                    <li><strong>Kết luận:</strong> Chưa Có </li>
-                    <li><strong>Xác suất AI:</strong> 0 %</li>
+                    <li><strong>Kết luận:</strong> {{result_final.isItAi}} </li>
+                    <li><strong>Độ Tin Cậy:</strong> {{result_final.probability}} %</li>
                 </ul>
-
+            {% endif %}
+                
         </div>
 {% endblock body %}
