@@ -8,29 +8,76 @@
 {% endblock head %} 
 
 {% block body %}
+    <h1 id="title-h1">Phân Tích Ảnh</h1>
+
     <div class="container">
-        <h1>Phân Tích Ảnh</h1>
-        <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="image">Chọn ảnh cần phân tích:</label>
-            <input type="file" id="image" name="image" accept="image/*" required onchange="previewImage(event)" />
-            <input type="submit" value="Phân Tích" />
-        </form>
-
-        <img id="preview" style="max-width: 400px; margin-top: 10px;" />
         
-        {% if image_url %}
-            <img src='{{image_url}}' />
-        {% endif %}
+        <!-- Left Column: Upload Image -->
+        <div class="upload-section">
+            <h2>Phân Tích Ảnh</h2>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="image">Chọn ảnh cần phân tích</label>
+                <input type="file" id="image" name="image" accept="image/*" required onchange="handleImageChange(event)" />
+                <input type="hidden" name="image_metadata" id="image_metadata" />
+                <input type="submit" value="Phân Tích" />
+            </form>
 
-        {% if result_detect %}
-            <h3>Kết quả phân tích:</h3>
-            <ul>
-                <li><strong>Kết luận:</strong> {{ result_detect.predictedResults }}</li>
-                <li><strong>Xác suất AI:</strong> {{ result_detect.aiProbability|floatformat:2 }} %</li>
-            </ul>
-        {% endif %}
-        
-        <a href="/">Quay về Trang Chủ</a>
-    </div>
+            {% if image_url %}
+                <img id="preview" src="{{ image_url }}" />
+            {% else %}
+                <img id="preview" />
+            {% endif %}
+
+            <br><a href="/">Quay về Trang Chủ</a>
+        </div>
+
+
+        <!-- Middle Column: Metadata -->
+        <div class="metadata-section">
+            <h2>Metadata File</h2>
+            {% if result_metadata %}
+                <ul>
+                    <li><strong>Tên tệp:</strong> {{ result_metadata.fileName }}</li>
+                    <li><strong>Kích thước (KB):</strong> {{ result_metadata.fileSizeKB }}</li>
+                    <li><strong>Loại MIME:</strong> {{ result_metadata.mimeType }}</li>
+                    <li><strong>Phần mở rộng:</strong> {{ result_metadata.fileExtension }}</li>
+                    <li><strong>Ngày sửa cuối:</strong> {{ result_metadata.lastModified }}</li>
+                    <li><strong>Là ảnh raster?:</strong> {{ result_metadata.isRaster|yesno:"Có,Không" }}</li>
+                    <li><strong>Có thể preview?:</strong> {{ result_metadata.canPreview|yesno:"Có,Không" }}</li>
+                    <li><strong>Kích thước ảnh:</strong> {{ result_metadata.width }} x {{ result_metadata.height }} px</li>
+                    <li><strong>Tỷ lệ ảnh:</strong> {{ result_metadata.aspectRatio }}</li>
+                    <li><strong>Orientation:</strong> {{ result_metadata.orientation }}</li>
+                    <li><strong>DPI ước lượng:</strong> {{ result_metadata.estimatedDpi }}</li>
+                </ul>
+            {% else %}
+                <p>Chưa có metadata.</p>
+            {% endif %}
+        </div>
+
+
+        <!-- Right Column: AI Analysis -->
+        <div class="analysis-section">
+            <h2>Kết Quả</h2>
+            {% if result_detect %}
+                <h3>AI Image Detector</h3>
+                <ul>
+                    <li><img src="{% static 'analyzer/images/decopy_ai.png' %}" /></li>
+                    <li><strong>Kết luận:</strong> {{ result_detect.predictedResults }}</li>
+                    <li><strong>Xác suất AI:</strong> {{ result_detect.aiProbability|floatformat:2 }} %</li>
+                </ul>
+
+                <h3>Image Analysis</h3>
+                <ul>
+                    <li><strong>Kết luận:</strong> {{ result_detect.predictedResults }}</li>
+                    <li><strong>Xác suất AI:</strong> {{ result_detect.aiProbability|floatformat:2 }} %</li>
+                </ul>
+
+                <h3>Tổng Kết</h3>
+                <ul>
+                    <li><strong>Kết luận:</strong> {{ result_detect.predictedResults }}</li>
+                    <li><strong>Xác suất AI:</strong> {{ result_detect.aiProbability|floatformat:2 }} %</li>
+                </ul>
+            {% endif %}
+        </div>
 {% endblock body %}
