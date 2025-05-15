@@ -16,27 +16,34 @@ def detect_deepfake_from_image(image_path):
             response = requests.post(url_upload, files=files)
 
         data = response.json()
+        if data.get("code") != 100000 or "result" not in data:
+            print("Upload failed:", data)
+            return {"error": "Upload failed or API error"}
 
-        if data.get("code") == 100000:
-            request_id = data["result"]["request_id"]
-            url_result = f"https://api.decopy.ai/api/decopy/ai-image-detector/get-job/{request_id}"
+        request_id = data["result"]["request_id"]
+        url_result = f"https://api.decopy.ai/api/decopy/ai-image-detector/get-job/{request_id}"
 
-            time.sleep(1)
-
+        # Chờ phản hồi API một cách linh hoạt
+        attempts = 5
+        result_data = None
+        for _ in range(attempts):
+            time.sleep(1)  # Đợi 1 giây trước mỗi lần thử
             result_response = requests.get(url_result)
             result_data = result_response.json()
+            if result_data.get("result", {}).get("output"):
+                break  # Thoát vòng lặp khi nhận dữ liệu hợp lệ
 
-            aiProbability = result_data['result']['output']['aiProbability'] * 100
-            predictedResults = result_data['result']['output']['predictedResults']
+        if not result_data or "output" not in result_data.get("result", {}):
+            return {"error": "Deepfake detection failed"}
 
-            return ({
-                'aiProbability':aiProbability,
-                'predictedResults': predictedResults
-            })
-        
-        else:
-            print("Upload failed.")
-            return None
+        ai_probability = result_data['result']['output']['aiProbability'] * 100
+        predicted_results = result_data['result']['output']['predictedResults']
+
+        return {
+            'aiProbability': ai_probability,
+            'predictedResults': predicted_results
+        }
+
     except Exception as e:
         print("Error:", str(e))
-        return None
+        return {"error": str(e)}
