@@ -35,7 +35,14 @@ def index(request):
         if temp_file_path:
             result_decopy = check_image_ai_decopy(temp_file_path)
             result_waist = check_image_ai_wasitai(temp_file_path)
-            result_final = combine_ai_results(result_decopy['isItAi'],result_waist['isItAi'],result_decopy['probability'],result_waist['probability'])
+
+            isItAi_decopy = result_decopy.get('isItAi') if result_decopy else None
+            isItAi_waist = result_waist.get('isItAi') if result_waist else None
+            prob_decopy = result_decopy.get('probability') if result_decopy else None
+            prob_waist = result_waist.get('probability') if result_waist else None
+
+            result_final = combine_ai_results(isItAi_decopy, isItAi_waist, prob_decopy, prob_waist)
+
 
     return render(request, 'analyzer/index.html', {
         'image_url': image_url,

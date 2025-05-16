@@ -36,7 +36,7 @@ def check_image_ai_decopy(image_path):
         if ai_probability > 50:
             ai_probability = (ai_probability-50) * 2
         elif ai_probability < 50:
-            ai_probability = ai_probability * 2
+            ai_probability = (50 - ai_probability) * 2
         else:
             ai_probability = 50
 
