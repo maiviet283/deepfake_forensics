@@ -70,3 +70,7 @@ def check_image_ai_decopy(image_path):
     except Exception as e:
         print("Error:", str(e))
         return {"error": str(e)}
+
+# Gọi thử
+a = check_image_ai_decopy(r'D:\IMAGES\Screenshot 2025-05-14 154814.png')
+print(a)
