@@ -1,11 +1,34 @@
 {% extends "layout.html" %}
 
 {% block head %}
-    <title> Trang Chủ </title>
+    <title>Trang Chủ - AI Image Analyzer</title>
 {% endblock head %}
 
 {% block body %}
-    <h1> Trang Chủ </h1>
-    <a href="/admin">Admin</a>
-    <a href="/analyzer">Phân Tích Ảnh</a>
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4 fw-bold mb-3">🧠 AI Image Analyzer</h1>
+        <p class="lead text-muted">Phát hiện hình ảnh được tạo bằng trí tuệ nhân tạo (AI) nhanh chóng và chính xác.</p>
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+        <a href="/analyzer" class="btn btn-primary btn-lg px-4 shadow">🚀 Phân Tích Ảnh</a>
+        <a href="/admin" class="btn btn-outline-secondary btn-lg px-4 shadow">🛠️ Quản Trị</a>
+        <a href="/analyzer/history" class="btn btn-outline-secondary btn-lg px-4 shadow">📜 Lịch Sử Phân Tích</a>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row justify-content-center text-center">
+        <div class="col-md-8">
+            <h3 class="fw-semibold">🌟 Thông Tin Dự Án</h3>
+            <ul class="list-group list-group-flush mt-3 text-start">
+                <li class="list-group-item">🔧 <strong>Backend:</strong> Django Framework</li>
+                <li class="list-group-item">🎨 <strong>Giao diện Admin:</strong> Jazzmin UI</li>
+                <li class="list-group-item">🧪 <strong>Xử lý ảnh:</strong> Gửi ảnh đến API của <code>Decopy AI</code> và <code>Wasit AI</code></li>
+                <li class="list-group-item">📊 <strong>Phân tích kết quả:</strong> Tổng hợp xác suất từ nhiều nguồn AI để đưa ra đánh giá chính xác</li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock body %}

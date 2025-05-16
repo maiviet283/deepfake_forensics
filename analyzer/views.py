@@ -43,6 +43,18 @@ def index(request):
 
             result_final = combine_ai_results(isItAi_decopy, isItAi_waist, prob_decopy, prob_waist)
 
+            # Cập nhật kết quả vào bản ghi Image
+            try:
+                if result_final:
+                    image_instance.result = (
+                        'F' if result_final.get('isItAi') == 'Ảnh Được Tạo Bằng AI' else
+                        'R' if result_final.get('isItAi') == 'Ảnh Thật' else
+                        'N'
+                    )
+                    image_instance.probability = result_final.get('probability', 0)
+                    image_instance.save()
+            except Exception as e:
+                print(f"Error updating result and probability: {e}")
 
     return render(request, 'analyzer/index.html', {
         'image_url': image_url,
