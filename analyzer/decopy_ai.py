@@ -25,7 +25,7 @@ def check_image_ai_decopy(image_path):
         attempts = 10
         result_data = None
         for _ in range(attempts):
-            time.sleep(2)  # Tăng thời gian chờ để đảm bảo task hoàn tất
+            time.sleep(5)  # Tăng thời gian chờ để đảm bảo task hoàn tất
             result_response = requests.get(url_result)
 
             if result_response.status_code != 200:
